@@ -1,3 +1,5 @@
+// src/extension.ts
+
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
 import * as path from 'path';
