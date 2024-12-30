@@ -74,6 +74,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 function getCommentSyntax(extension: string): string | null {
     const commentSyntaxMap: { [key: string]: string } = {
+        '.mjs': '//',
+        '.rs': '//',
         '.js': '//',
         '.jsx': '//',
         '.ts': '//',
