@@ -81,6 +81,8 @@ function getCommentSyntax(extension: string): string | null {
         '.ts': '//',
         '.tsx': '//',
         '.py': '#',
+        '.tf': '#',
+        '.hcl': '#',
         '.java': '//',
         '.c': '//',
         '.cpp': '//',
