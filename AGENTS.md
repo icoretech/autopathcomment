@@ -27,6 +27,7 @@
 - Unit tests: isolate helpers (e.g., `getCommentSyntax`).
 - Integration tests: spin up a VS Code instance and assert behavior on save.
 - Run locally with `npm test`. CI runs headless under Xvfb.
+- CI resolves the latest VS Code stable version at runtime and caches `.vscode-test/` by version for faster runs.
 
 ## Packaging Notes
 - The VSIX is kept minimal via `.vscodeignore` (excludes `.github/`, tests, TypeScript sources, Release Please files).

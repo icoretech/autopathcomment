@@ -11,8 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      VSCODE_VERSION: '1.104.2'
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -26,11 +24,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Resolve VS Code stable version
+        id: vscode
+        run: |
+          set -euo pipefail
+          ver=$(curl -sSfL https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]')
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "VSCODE_VERSION=$ver" >> "$GITHUB_ENV"
+
       - name: Cache VS Code test binaries
         uses: actions/cache@v4
         with:
           path: .vscode-test
-          key: vscode-test-${{ runner.os }}-${{ env.VSCODE_VERSION }}
+          key: vscode-test-${{ runner.os }}-${{ steps.vscode.outputs.version }}
 
       - name: Typecheck
         run: npm run check-types
