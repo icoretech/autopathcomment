@@ -83,6 +83,10 @@ Conventional Commits quick reference
 Commit message linting
 - A commitlint workflow enforces Conventional Commits on PRs. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
 
+Dependabot behavior
+- npm updates use `fix(deps): …` titles so Release Please treats them as PATCH releases when merged.
+- Commitlint checks are skipped for Dependabot PRs to avoid noise.
+
 ## Usage
 
 1. Open a file within a folder or workspace in VS Code.

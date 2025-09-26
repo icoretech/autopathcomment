@@ -37,7 +37,11 @@
   - `feat: …` (minor), `fix: …` (patch), `BREAKING CHANGE:` in body (major), others (`docs:`, `chore:`, `refactor:`) do not trigger releases by default.
   - To force a version, include `release-as: x.y.z` in the commit or PR body of the release PR.
 - PRs should include: summary, linked issues (`Fixes #123`), passing CI.
-- Commitlint enforces messages on PRs; see `.commitlintrc.cjs`. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
+- Commitlint enforces messages on PRs (skips Dependabot); see `.commitlintrc.cjs`. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
+
+### Dependabot & Releases
+- Dependabot PRs for npm are titled `fix(deps): bump ...` so they count as PATCH releases.
+- Security updates are included in the same flow; merging them will trigger a patch release via Release Please.
 
 ## Releases & Publishing
 - Flow:

@@ -10,10 +10,10 @@ permissions:
 
 jobs:
   lint:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: wagoid/commitlint-github-action@v6
         with:
           configFile: .commitlintrc.cjs
-

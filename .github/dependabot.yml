@@ -1,32 +1,29 @@
 # Dependabot configuration (v2)
 version: 2
 updates:
-  # NPM packages in this repository (workspace root)
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: daily
-      time: "01:00"
     commit-message:
-      prefix: "chore(deps)"
+      prefix: fix
       include: scope
-    versioning-strategy: increase
-    open-pull-requests-limit: 20
-    labels:
-      - dependencies
-      - automerge
+    open-pull-requests-limit: 10
+    groups:
+      all-minor-patch:
+        update-types: ["minor", "patch"]
+      all-major:
+        update-types: ["major"]
+    labels: [dependencies, automerge]
 
-  # GitHub Actions in this repository
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: daily
-      time: "01:30"
+      interval: weekly
     commit-message:
-      prefix: "chore(actions)"
-    versioning-strategy: increase
-    open-pull-requests-limit: 20
-    labels:
-      - dependencies
-      - automerge
-
+      prefix: chore(actions)
+    open-pull-requests-limit: 10
+    groups:
+      all:
+        patterns: ["*"]
+    labels: [dependencies, automerge]
