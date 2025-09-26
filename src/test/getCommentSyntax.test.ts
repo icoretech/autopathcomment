@@ -2,7 +2,6 @@ import * as assert from 'assert';
 
 // Import compiled extension to test the helper. Tests run after `npm run compile` builds `dist/extension.js`.
 // The compiled tests live in `out/test`, so this relative path resolves to the built extension.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ext = require('../../dist/extension.js');
 
 suite('getCommentSyntax', () => {
@@ -21,4 +20,3 @@ suite('getCommentSyntax', () => {
     assert.strictEqual(ext.getCommentSyntax('.unknownext'), null);
   });
 });
-
