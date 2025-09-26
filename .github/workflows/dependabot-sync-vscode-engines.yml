@@ -1,0 +1,75 @@
+name: Sync VS Code engines for @types/vscode bumps
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-engines:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if @types/vscode is updated
+        id: check
+        run: |
+          echo "deps: ${{ steps.meta.outputs.dependency-names }}"
+          if echo "${{ steps.meta.outputs.dependency-names }}" | grep -q "@types/vscode"; then
+            echo "touch=true" >> $GITHUB_OUTPUT
+          else
+            echo "touch=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout PR branch
+        if: steps.check.outputs.touch == 'true'
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          persist-credentials: true
+
+      - name: Align engines.vscode to @types/vscode (if needed)
+        if: steps.check.outputs.touch == 'true'
+        run: |
+          node -e '
+            const fs = require("fs");
+            const pkg = JSON.parse(fs.readFileSync("package.json","utf8"));
+            const v = pkg.devDependencies && pkg.devDependencies["@types/vscode"]; if(!v){ process.exit(0); }
+            const m = String(v).match(/(\d+)\.(\d+)\.(\d+)/); if(!m){ process.exit(0); }
+            const want = `^${m[1]}.${m[2]}.0`;
+            const cur = pkg.engines && pkg.engines.vscode || "";
+            if(cur !== want){
+              pkg.engines = pkg.engines || {};
+              pkg.engines.vscode = want;
+              fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+              console.log("Updated engines.vscode to", want);
+            } else {
+              console.log("engines.vscode already aligned:", cur);
+            }
+          '
+
+      - name: Update lockfile (if needed)
+        if: steps.check.outputs.touch == 'true'
+        run: npm i --package-lock-only
+
+      - name: Commit changes back to PR
+        if: steps.check.outputs.touch == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(ci): align engines.vscode with @types/vscode"
+          branch: ${{ github.event.pull_request.head.ref }}
+
