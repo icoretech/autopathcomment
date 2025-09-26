@@ -37,55 +37,7 @@
    3. Run `npm run package` or `vsce package` to create a `.vsix`.
    4. Install the `.vsix` in VS Code as above.
 
-## Releases & Publishing
-
-This repo includes GitHub Actions to validate builds and publish releases:
-
-- CI: `.github/workflows/ci.yml` runs on pushes and PRs to lint, typecheck, test, and build.
-- Release: `.github/workflows/release.yml` runs on Git tags like `v0.0.4` and will:
-  - build and package the extension (`.vsix`),
-  - create a GitHub Release with the VSIX attached,
-  - publish to VS Code Marketplace (if `VSCE_PAT` secret is set).
-
-- Release Please: `.github/workflows/release-please.yml` manages versions and CHANGELOG using Conventional Commits. It opens a release PR. When merged, it creates a tag and GitHub Release; that tag triggers the Release workflow to build and publish.
-
-The VSIX package intentionally includes only the runtime files: `dist/extension.js`, `package.json`, `README.md`, `CHANGELOG.md`, and `LICENSE`.
-
-### Setup for Marketplace Publishing
-
-1. Create a Publisher on the VS Code Marketplace and ensure the `publisher` field in `package.json` matches it. The current value is `icoretech`.
-2. Create a Personal Access Token (Classic) with Marketplace scope via `vsce` docs and add it as repository secret `VSCE_PAT`.
-3. Optional: enable Release Please by following Conventional Commits (feat:, fix:, docs:, chore:, refactor:, etc.).
-
-### Cutting a Release
-
-Option A (automated): Merge the Release Please PR that it opens. It will tag and publish a GitHub Release; the Release workflow will build, attach the `.vsix`, and publish to Marketplace.
-
-Option B (manual): Bump the version locally: `npm version x.y.z` and push the tag `vX.Y.Z`. The Release workflow will package and publish to Marketplace.
-
-### Release Flow at a Glance
-
-- Work as usual and write Conventional Commits (`feat:`, `fix:`, etc.).
-- Release Please opens a release PR that bumps version and updates CHANGELOG.
-- Merge the release PR → a tag `vX.Y.Z` is created.
-- The `Release` workflow builds the VSIX and publishes to Marketplace (with `VSCE_PAT`).
-
-Why a release PR may not open
-- Only `feat:`, `fix:`, or commits containing `BREAKING CHANGE:` trigger versions by default. `docs:`/`chore:`/`ci:` won’t trigger.
-- Force a release by adding `release-as: x.y.z` in the commit or release PR body.
-
-Conventional Commits quick reference
-- `feat(scope?): short summary` → MINOR
-- `fix(scope?): short summary` → PATCH
-- `BREAKING CHANGE: details` in body → MAJOR
-- Other types (docs, chore, refactor, ci) do not trigger a release by default.
-
-Commit message linting
-- A commitlint workflow enforces Conventional Commits on PRs. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
-
-Dependabot behavior
-- npm updates use `fix(deps): …` titles so Release Please treats them as PATCH releases when merged.
-- Commitlint checks are skipped for Dependabot PRs to avoid noise.
+ 
 
 ## Usage
 
