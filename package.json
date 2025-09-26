@@ -4,6 +4,7 @@
   "description": "Adds a comment with the file's relative path at the top of the file upon saving",
   "version": "0.0.4",
   "publisher": "icoretech",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/icoretech/autopathcomment.git"
