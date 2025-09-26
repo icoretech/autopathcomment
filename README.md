@@ -27,7 +27,7 @@
    - Search for "AutoPathComment" by publisher "icoretech" and install.
 
 2. **From a VSIX file**:
-   1. Download the `autopathcomment-0.0.1.vsix` file (created by `vsce package`).
+   1. Download the `autopathcomment-<version>.vsix` file (created by `vsce package`).
    2. In VS Code, press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS) and select **Extensions: Install from VSIX...**.
    3. Select the downloaded `.vsix` file to install.
 
@@ -49,6 +49,8 @@ This repo includes GitHub Actions to validate builds and publish releases:
 
 - Release Please: `.github/workflows/release-please.yml` manages versions and CHANGELOG automatically using conventional commits. It creates a release PR; when merged, a tag and GitHub Release are created, which triggers the Release workflow to build and publish.
 
+The VSIX package intentionally includes only the runtime files: `dist/extension.js`, `package.json`, `README.md`, `CHANGELOG.md`, and `LICENSE`.
+
 ### Setup for Marketplace Publishing
 
 1. Create a Publisher on the VS Code Marketplace and ensure the `publisher` field in `package.json` matches it. The current value is `icoretech`.
@@ -60,6 +62,13 @@ This repo includes GitHub Actions to validate builds and publish releases:
 Option A (automated): Merge the Release Please PR that it opens. It will tag and publish a GitHub Release; the Release workflow will build, attach the `.vsix`, and publish to Marketplace.
 
 Option B (manual): Bump the version locally: `npm version x.y.z` and push the tag `vX.Y.Z`. The Release workflow will package and publish to Marketplace.
+
+### Release Flow at a Glance
+
+- Work as usual and write Conventional Commits (`feat:`, `fix:`, etc.).
+- Release Please opens a release PR that bumps version and updates CHANGELOG.
+- Merge the release PR → a tag `vX.Y.Z` is created.
+- The `Release` workflow builds the VSIX and publishes to Marketplace (with `VSCE_PAT`).
 
 ## Usage
 
