@@ -18,7 +18,7 @@
 
 ## Requirements
 
-- Visual Studio Code 1.100.0 or higher
+- Visual Studio Code 1.104.0 or higher
 - Node.js (for extension development, if building from source)
 
 ## Installation
@@ -62,9 +62,23 @@
 
 ## Configuration
 
-Right now, the extension offers limited customization. You can modify the code to:
+You can customize the comment prefix per file extension via Settings:
 
-- **Adjust Supported File Types** by editing the `commentSyntaxMap` in [extension.ts](./src/extension.ts).
+- Setting: `autopathcomment.commentSyntaxMap`
+- Keys are file extensions (include the dot), values are single-line comment prefixes.
+
+Examples:
+
+```jsonc
+// settings.json
+{
+  "autopathcomment.commentSyntaxMap": {
+    ".sh": "#",
+    ".kt": "//",
+    ".zig": "//"
+  }
+}
+```
 
 ## Known Issues / Limitations
 

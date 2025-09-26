@@ -10,7 +10,7 @@
     "url": "https://github.com/icoretech/autopathcomment.git"
   },
   "engines": {
-    "vscode": "^1.100.0"
+    "vscode": "^1.104.0"
   },
   "categories": [
     "Other"
@@ -19,7 +19,21 @@
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
-  "contributes": {},
+  "contributes": {
+    "configuration": {
+      "title": "AutoPathComment",
+      "properties": {
+        "autopathcomment.commentSyntaxMap": {
+          "type": "object",
+          "markdownDescription": "Custom mapping of file extensions to single-line comment prefixes. Keys must include the dot (e.g. `.ts`) and values are prefixes like `//` or `#`. User values override built-in defaults.",
+          "default": {},
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && npm run lint && node esbuild.js",
