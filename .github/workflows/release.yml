@@ -35,6 +35,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug tag context
+        run: |
+          echo "github.ref=$GITHUB_REF"
+          echo "github.sha=$GITHUB_SHA"
+          echo "github.event_name=$GITHUB_EVENT_NAME"
+          echo "Tag (raw): ${GITHUB_REF#refs/tags/}"
+          git describe --tags --always || true
+
       - name: Verify tag matches package.json version
         id: verify
         shell: bash
