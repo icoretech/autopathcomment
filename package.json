@@ -46,7 +46,7 @@
     "@vscode/test-cli": "0.0.11",
     "@vscode/test-electron": "2.5.2",
     "@commitlint/cli": "20.0.0",
-    "@commitlint/config-conventional": "19.5.0",
+    "@commitlint/config-conventional": "20.0.0",
     "@vscode/vsce": "3.6.1",
     "esbuild": "0.25.10",
     "eslint": "9.36.0",
