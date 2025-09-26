@@ -8,9 +8,9 @@
 - `CHANGELOG.md`: maintained automatically by Release Please.
 
 ## Build, Test, and Development Commands
-- `npm run compile` — typecheck, lint, and build development bundle.
-- `npm run package` — production build used for releases.
-- `npm test` — runs VS Code extension tests via `@vscode/test-cli`.
+- `npm run compile` — typecheck, lint, build dev bundle.
+- `npm run package` — production build for releases.
+- `npm test` — runs VS Code tests via `@vscode/test-cli` (CI uses `xvfb-run`).
 - `npm run check` — typecheck + lint + tests.
 - `npx @vscode/vsce package` — create a `.vsix` locally.
 
@@ -26,19 +26,25 @@
 - Location: tests in `src/test`, filename pattern `*.test.ts`.
 - Unit tests: isolate helpers (e.g., `getCommentSyntax`).
 - Integration tests: spin up a VS Code instance and assert behavior on save.
-- Run locally with `npm test`. CI executes tests on PRs.
+- Run locally with `npm test`. CI runs headless under Xvfb.
+
+## Packaging Notes
+- The VSIX is kept minimal via `.vscodeignore` (excludes `.github/`, tests, TypeScript sources, Release Please files).
+- Included: `dist/extension.js`, `package.json`, `README.md`, `CHANGELOG.md`, `LICENSE`.
 
 ## Commit & Pull Request Guidelines
-- Conventional Commits are required (used by Release Please):
-  - `feat: add …`, `fix: correct …`, `docs: …`, `chore: …`, `refactor: …`.
-- PRs should include: clear summary, linked issues (`Fixes #123`), and evidence of tests passing.
-- Keep changes focused; avoid opportunistic refactors unless agreed.
+- Conventional Commits are required (Release Please uses them):
+  - `feat: …` (minor), `fix: …` (patch), `BREAKING CHANGE:` in body (major), others (`docs:`, `chore:`, `refactor:`) do not trigger releases by default.
+  - To force a version, include `release-as: x.y.z` in the commit or PR body of the release PR.
+- PRs should include: summary, linked issues (`Fixes #123`), passing CI.
+- Commitlint enforces messages on PRs; see `.commitlintrc.cjs`. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
 
 ## Releases & Publishing
-- Release Please opens a release PR with version bump and CHANGELOG updates.
-- Merging that PR creates a tag and GitHub Release.
-- `release.yml` builds, attaches the `.vsix`, and publishes to Marketplace when `VSCE_PAT` is set as a repository secret.
-- Manual alternative: `npm version x.y.z && git push --follow-tags` (must match `package.json`).
+- Flow:
+  - Work with Conventional Commits → Release Please opens a release PR (updates version + CHANGELOG).
+  - Merge the release PR → tag `vX.Y.Z` is created automatically.
+  - Tag triggers `release.yml` → build VSIX, attach to GitHub Release, publish to Marketplace (needs `VSCE_PAT`).
+- Manual fallback: `npm version x.y.z && git push --follow-tags` (bypasses Release Please).
 
 ## Security & Configuration Tips
 - Never commit tokens. Add Marketplace token as `VSCE_PAT` (Repo → Settings → Secrets → Actions).

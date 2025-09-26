@@ -47,7 +47,7 @@ This repo includes GitHub Actions to validate builds and publish releases:
   - create a GitHub Release with the VSIX attached,
   - publish to VS Code Marketplace (if `VSCE_PAT` secret is set).
 
-- Release Please: `.github/workflows/release-please.yml` manages versions and CHANGELOG automatically using conventional commits. It creates a release PR; when merged, a tag and GitHub Release are created, which triggers the Release workflow to build and publish.
+- Release Please: `.github/workflows/release-please.yml` manages versions and CHANGELOG using Conventional Commits. It opens a release PR. When merged, it creates a tag and GitHub Release; that tag triggers the Release workflow to build and publish.
 
 The VSIX package intentionally includes only the runtime files: `dist/extension.js`, `package.json`, `README.md`, `CHANGELOG.md`, and `LICENSE`.
 
@@ -69,6 +69,19 @@ Option B (manual): Bump the version locally: `npm version x.y.z` and push the ta
 - Release Please opens a release PR that bumps version and updates CHANGELOG.
 - Merge the release PR → a tag `vX.Y.Z` is created.
 - The `Release` workflow builds the VSIX and publishes to Marketplace (with `VSCE_PAT`).
+
+Why a release PR may not open
+- Only `feat:`, `fix:`, or commits containing `BREAKING CHANGE:` trigger versions by default. `docs:`/`chore:`/`ci:` won’t trigger.
+- Force a release by adding `release-as: x.y.z` in the commit or release PR body.
+
+Conventional Commits quick reference
+- `feat(scope?): short summary` → MINOR
+- `fix(scope?): short summary` → PATCH
+- `BREAKING CHANGE: details` in body → MAJOR
+- Other types (docs, chore, refactor, ci) do not trigger a release by default.
+
+Commit message linting
+- A commitlint workflow enforces Conventional Commits on PRs. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
 
 ## Usage
 
