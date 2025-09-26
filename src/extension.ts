@@ -72,26 +72,42 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(willSaveListener);
 }
 
+const DEFAULT_COMMENT_SYNTAX_MAP: Record<string, string> = {
+    '.mjs': '//',
+    '.rs': '//',
+    '.js': '//',
+    '.jsx': '//',
+    '.ts': '//',
+    '.tsx': '//',
+    '.py': '#',
+    '.tf': '#',
+    '.hcl': '#',
+    '.java': '//',
+    '.c': '//',
+    '.cpp': '//',
+    '.cs': '//',
+    '.rb': '#',
+    '.go': '//',
+    '.php': '//',
+};
+
 function getCommentSyntax(extension: string): string | null {
-    const commentSyntaxMap: { [key: string]: string } = {
-        '.mjs': '//',
-        '.rs': '//',
-        '.js': '//',
-        '.jsx': '//',
-        '.ts': '//',
-        '.tsx': '//',
-        '.py': '#',
-        '.tf': '#',
-        '.hcl': '#',
-        '.java': '//',
-        '.c': '//',
-        '.cpp': '//',
-        '.cs': '//',
-        '.rb': '#',
-        '.go': '//',
-        '.php': '//',
-    };
-    return commentSyntaxMap[extension] || null;
+    // Read user overrides each time to reflect settings changes immediately.
+    const cfg = vscode.workspace.getConfiguration('autopathcomment');
+    const userMap = cfg.get<Record<string, string>>('commentSyntaxMap', {});
+    const effective = { ...DEFAULT_COMMENT_SYNTAX_MAP, ...normalizeMap(userMap) } as Record<string, string>;
+    return effective[extension] || null;
+}
+
+function normalizeMap(map: Record<string, string> | undefined): Record<string, string> {
+    if (!map) return {};
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(map)) {
+        if (!k) continue;
+        const key = k.startsWith('.') ? k : `.${k}`;
+        if (typeof v === 'string' && v.trim().length > 0) out[key] = v;
+    }
+    return out;
 }
 
 export function deactivate() {}
