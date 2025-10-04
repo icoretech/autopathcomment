@@ -68,7 +68,7 @@ jobs:
 
       - name: Commit changes back to PR
         if: steps.check.outputs.touch == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: "chore(ci): align engines.vscode with @types/vscode"
           branch: ${{ github.event.pull_request.head.ref }}
