@@ -4,6 +4,17 @@ All notable changes to the "autopathcomment" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.6](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.5...autopathcomment-v0.0.6) (2025-10-04)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump @types/node in the all-minor-patch group ([#9](https://github.com/icoretech/autopathcomment/issues/9)) ([ed9f1e2](https://github.com/icoretech/autopathcomment/commit/ed9f1e2f2af0dba4b4272b2d12d4006269d548a9))
+* **deps-dev:** bump @vscode/vsce in the all-minor-patch group ([#5](https://github.com/icoretech/autopathcomment/issues/5)) ([f94a050](https://github.com/icoretech/autopathcomment/commit/f94a050de7ff140cf74895bd9d5d554d80f97529))
+* **deps-dev:** bump the all-minor-patch group with 3 updates ([#7](https://github.com/icoretech/autopathcomment/issues/7)) ([ca074fd](https://github.com/icoretech/autopathcomment/commit/ca074fd62b0dfabacf65e453841bd8e37ef3b31e))
+* **deps-dev:** bump the all-minor-patch group with 3 updates ([#8](https://github.com/icoretech/autopathcomment/issues/8)) ([581ac01](https://github.com/icoretech/autopathcomment/commit/581ac0108f8a8ff712f42fbf970b164ce303da25))
+* enforce zero-warning lint and resolve curly/test warnings ([dc8e9c2](https://github.com/icoretech/autopathcomment/commit/dc8e9c201816854b19c41cc2102c6a219b3080a2))
+
 ## [0.0.5](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.4...autopathcomment-v0.0.5) (2025-09-26)
 
 
