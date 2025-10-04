@@ -100,12 +100,18 @@ function getCommentSyntax(extension: string): string | null {
 }
 
 function normalizeMap(map: Record<string, string> | undefined): Record<string, string> {
-    if (!map) return {};
+    if (!map) {
+        return {};
+    }
     const out: Record<string, string> = {};
     for (const [k, v] of Object.entries(map)) {
-        if (!k) continue;
+        if (!k) {
+            continue;
+        }
         const key = k.startsWith('.') ? k : `.${k}`;
-        if (typeof v === 'string' && v.trim().length > 0) out[key] = v;
+        if (typeof v === 'string' && v.trim().length > 0) {
+            out[key] = v;
+        }
     }
     return out;
 }

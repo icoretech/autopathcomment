@@ -1,8 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ext = require('../../dist/extension.js');
+// @ts-ignore - importing built CJS bundle for runtime
+import * as ext from '../../dist/extension.js';
 
 suite('Configuration override', () => {
   test('user settings override default map', async () => {
@@ -17,4 +16,3 @@ suite('Configuration override', () => {
     }
   });
 });
-

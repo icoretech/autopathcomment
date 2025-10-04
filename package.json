@@ -45,7 +45,7 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
-    "lint": "eslint src",
+    "lint": "eslint src --max-warnings=0",
     "test": "vscode-test",
     "vsce:package": "vsce package",
     "vsce:publish": "vsce publish",
