@@ -4,6 +4,11 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+const RUBY_FROZEN_STRING_LITERAL_REGEX = /^#\s*frozen_string_literal:\s*(?:true|false)?\s*$/i;
+const RUBY_ENCODING_REGEX = /^#\s*encoding:\s*[-\w.]+\s*$/i;
+const PYTHON_ENCODING_REGEX = /^#.*coding[:=]\s*[-\w.]+.*$/i;
+const PHP_OPEN_TAG_REGEX = /^<\?/i;
+
 export function activate(context: vscode.ExtensionContext) {
     console.log('AutoPathComment extension is now active!');
 
@@ -40,30 +45,26 @@ export function activate(context: vscode.ExtensionContext) {
         const commentLine = `${commentSyntax} ${filePath}`;
         const commentToInsert = `${commentLine}\n\n`;
 
-        // Check the first line
+        // Check the first couple of lines
         const firstLine = document.lineAt(0).text;
+        const trimmedFirstLine = firstLine.trim();
 
         // If the file already starts with that exact line, do nothing
-        if (firstLine.trim() === commentLine.trim()) {
+        if (trimmedFirstLine === commentLine.trim()) {
             return;
         }
-
-        // Detect a shebang (e.g. "#!/usr/bin/env python")
-        const hasShebang = firstLine.startsWith('#!');
 
         // Use event.waitUntil(...) to apply the edit before the save finishes
         event.waitUntil((async () => {
             const edit = new vscode.WorkspaceEdit();
 
-            if (hasShebang) {
-                // Skip entirely if you never want to insert above shebang
-                // If you prefer to insert BELOW the shebang, do something like:
-                // edit.insert(document.uri, new vscode.Position(1, 0), commentToInsert);
+            const insertionLine = determineInsertionLine(document, fileExtension);
+            const existingLine = insertionLine < document.lineCount ? document.lineAt(insertionLine).text.trim() : '';
+            if (existingLine === commentLine.trim()) {
                 return;
-            } else {
-                // Normal case: insert comment at the top
-                edit.insert(document.uri, new vscode.Position(0, 0), commentToInsert);
             }
+
+            edit.insert(document.uri, new vscode.Position(insertionLine, 0), commentToInsert);
 
             await vscode.workspace.applyEdit(edit);
         })());
@@ -119,4 +120,55 @@ function normalizeMap(map: Record<string, string> | undefined): Record<string, s
 export function deactivate() {}
 
 // Exported for tests
+export function determineInsertionLine(document: vscode.TextDocument, fileExtension: string): number {
+    for (let index = 0; index < document.lineCount; index++) {
+        const text = document.lineAt(index).text;
+        const trimmed = text.trim();
+
+        if (trimmed.length === 0) {
+            if (index === 0) {
+                continue;
+            }
+            return index;
+        }
+
+        if (index === 0 && trimmed.startsWith('#!')) {
+            continue;
+        }
+
+        if (fileExtension === '.php' && isPhpOpeningTag(trimmed)) {
+            continue;
+        }
+
+        if (fileExtension === '.rb' && (isRubyFrozenStringLiteralLine(trimmed) || isRubyEncodingComment(trimmed))) {
+            continue;
+        }
+
+        if (fileExtension === '.py' && isPythonEncodingComment(trimmed)) {
+            continue;
+        }
+
+        // Stop once we hit the first meaningful line we shouldn't skip.
+        return index;
+    }
+
+    return document.lineCount;
+}
+
+export function isRubyFrozenStringLiteralLine(line: string): boolean {
+    return RUBY_FROZEN_STRING_LITERAL_REGEX.test(line.trim());
+}
+
+export function isRubyEncodingComment(line: string): boolean {
+    return RUBY_ENCODING_REGEX.test(line.trim());
+}
+
+export function isPythonEncodingComment(line: string): boolean {
+    return PYTHON_ENCODING_REGEX.test(line.trim());
+}
+
+export function isPhpOpeningTag(line: string): boolean {
+    return PHP_OPEN_TAG_REGEX.test(line.trim());
+}
+
 export { getCommentSyntax };

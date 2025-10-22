@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -e
+
+# Allow skipping via HUSKY=0 (e.g., in CI scripts that manage commits manually).
+if [ "${HUSKY-}" = "0" ]; then
+  exit 0
+fi
+
+npx --no -- commitlint --edit "$1"
