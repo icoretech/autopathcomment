@@ -10,7 +10,12 @@ permissions:
 
 jobs:
   lint:
-    if: github.actor != 'dependabot[bot]'
+    # Skip bot-authored dependency PRs and bot edits to those PRs
+    # Commitlint failures on long Dependabot titles are noisy and non-blocking
+    if: >
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      !startsWith(github.head_ref, 'dependabot/') &&
+      !startsWith(github.head_ref, 'renovate/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

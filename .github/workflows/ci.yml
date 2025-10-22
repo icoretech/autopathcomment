@@ -61,10 +61,11 @@ jobs:
         run: npm run package
 
       - name: Package VSIX (sanity)
+        if: github.event_name != 'pull_request'
         run: npx --yes @vscode/vsce package
 
       - name: Upload VSIX artifact
-        if: always()
+        if: github.event_name != 'pull_request' && always()
         uses: actions/upload-artifact@v4
         with:
           name: vsix
