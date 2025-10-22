@@ -2,7 +2,7 @@
   "name": "autopathcomment",
   "displayName": "AutoPathComment",
   "description": "Adds a comment with the file's relative path at the top of the file upon saving",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "icoretech",
   "license": "MIT",
   "repository": {
