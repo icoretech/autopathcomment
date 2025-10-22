@@ -4,6 +4,13 @@ All notable changes to the "autopathcomment" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.8](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.7...autopathcomment-v0.0.8) (2025-10-22)
+
+
+### Features
+
+* upgrade skip logic around directives ([5f826ca](https://github.com/icoretech/autopathcomment/commit/5f826cac5ef5eaf27789b85f94ecd092c2fa7fa4))
+
 ## [0.0.7](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.6...autopathcomment-v0.0.7) (2025-10-22)
 
 
