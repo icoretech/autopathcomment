@@ -4,6 +4,15 @@ All notable changes to the "autopathcomment" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.7](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.6...autopathcomment-v0.0.7) (2025-10-22)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the all-minor-patch group across 1 directory with 7 updates ([#18](https://github.com/icoretech/autopathcomment/issues/18)) ([0b92b02](https://github.com/icoretech/autopathcomment/commit/0b92b02a4020e874e4bd6b70cc6229e5492f87e7))
+* **deps-dev:** bump the all-minor-patch group with 2 updates ([#11](https://github.com/icoretech/autopathcomment/issues/11)) ([ddc4f81](https://github.com/icoretech/autopathcomment/commit/ddc4f81b775b77d7ff364c0b788404af996c850c))
+* **deps-dev:** bump the all-minor-patch group with 2 updates ([#12](https://github.com/icoretech/autopathcomment/issues/12)) ([37bcac6](https://github.com/icoretech/autopathcomment/commit/37bcac63350eed43baebe4973cd885c80263d36a))
+
 ## [0.0.6](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.5...autopathcomment-v0.0.6) (2025-10-04)
 
 
