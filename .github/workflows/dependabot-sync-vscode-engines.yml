@@ -36,7 +36,7 @@ jobs:
 
       - name: Checkout PR branch
         if: steps.check.outputs.touch == 'true'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.repository }}
