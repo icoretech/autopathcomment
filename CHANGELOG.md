@@ -4,6 +4,13 @@ All notable changes to the "autopathcomment" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.9](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.8...autopathcomment-v0.0.9) (2026-01-01)
+
+
+### Bug Fixes
+
+* **ci:** fix release workflow condition ([7ed32ea](https://github.com/icoretech/autopathcomment/commit/7ed32ea3de342089e09335bdf3cff6e8139f5e17))
+
 ## [0.0.8](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.7...autopathcomment-v0.0.8) (2026-01-01)
 
 
