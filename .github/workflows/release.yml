@@ -93,9 +93,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to VS Code Marketplace
-        if: ${{ secrets.VSCE_PAT != '' }}
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        if: ${{ env.VSCE_PAT != '' }}
         run: |
           echo "Publishing to VS Code Marketplace"
           npx --yes @vscode/vsce publish --packagePath "${{ steps.vars.outputs.file }}"
