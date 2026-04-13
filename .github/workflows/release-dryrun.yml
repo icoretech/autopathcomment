@@ -45,7 +45,7 @@ jobs:
           path: ${{ steps.vars.outputs.file }}
 
       - name: Create draft GitHub Release (dry-run)
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           draft: true
           tag_name: ${{ steps.vars.outputs.tag }}
