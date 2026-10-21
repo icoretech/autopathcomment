@@ -1,22 +1,64 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert/strict';
+import { getCommentSyntax } from '../extension';
 
-// Import compiled extension to test the helper. Tests run after `npm run compile` builds `dist/extension.js`.
-// The compiled tests live in `out/test`, so this relative path resolves to the built extension.
-const ext = require('../../dist/extension.js');
-
-suite('getCommentSyntax', () => {
-  test('maps common extensions', () => {
-    assert.strictEqual(ext.getCommentSyntax('.ts'), '//');
-    assert.strictEqual(ext.getCommentSyntax('.tsx'), '//');
-    assert.strictEqual(ext.getCommentSyntax('.js'), '//');
-    assert.strictEqual(ext.getCommentSyntax('.jsx'), '//');
-    assert.strictEqual(ext.getCommentSyntax('.py'), '#');
-    assert.strictEqual(ext.getCommentSyntax('.rb'), '#');
-    assert.strictEqual(ext.getCommentSyntax('.go'), '//');
-    assert.strictEqual(ext.getCommentSyntax('.php'), '//');
-  });
-
-  test('returns null for unknown extension', () => {
-    assert.strictEqual(ext.getCommentSyntax('.unknownext'), null);
+suite('Default comment syntax', () => {
+  for (const extension of [
+    'ts',
+    'tsx',
+    'js',
+    'jsx',
+    'mjs',
+    'cjs',
+    'mts',
+    'cts',
+    'rs',
+    'java',
+    'c',
+    'cpp',
+    'cc',
+    'cxx',
+    'h',
+    'hpp',
+    'cs',
+    'go',
+    'php',
+    'kt',
+    'kts',
+    'swift',
+    'dart',
+  ]) {
+    test(`uses slash comments for .${extension}`, () => {
+      // Given / When / Then
+      assert.equal(getCommentSyntax(`.${extension}`), '//');
+    });
+  }
+  for (const extension of [
+    'py',
+    'rb',
+    'tf',
+    'hcl',
+    'sh',
+    'bash',
+    'yaml',
+    'yml',
+    'toml',
+    'ex',
+    'exs',
+  ]) {
+    test(`uses hash comments for .${extension}`, () => {
+      // Given / When / Then
+      assert.equal(getCommentSyntax(`.${extension}`), '#');
+    });
+  }
+  for (const extension of ['lua', 'sql']) {
+    test(`uses dash comments for .${extension}`, () => {
+      // Given / When / Then
+      assert.equal(getCommentSyntax(`.${extension}`), '--');
+    });
+  }
+  test('returns null for unsupported formats', () => {
+    // Given / When / Then
+    assert.equal(getCommentSyntax('.json'), null);
+    assert.equal(getCommentSyntax('.html'), null);
   });
 });

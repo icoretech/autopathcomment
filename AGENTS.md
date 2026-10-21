@@ -15,11 +15,12 @@
 - `npx @vscode/vsce package` — create a `.vsix` locally.
 
 ## Coding Style & Naming Conventions
-- Language: TypeScript. Follow the repo’s ESLint rules (`eslint.config.mjs`).
+- Language: TypeScript. Follow the repo's Biome rules (`biome.json`).
 - Indentation: 2 spaces; keep lines focused and readable.
 - Prefer named exports; avoid default exports.
 - Use explicit types where helpful; keep functions small and pure when possible.
 - Run `npm run lint` before sending PRs; fix or justify any warnings.
+- Run `npm run lint:fix` for automatic formatting and safe lint fixes.
 
 ## Testing Guidelines
 - Runner: `@vscode/test-cli` (Mocha under the hood).
@@ -41,14 +42,14 @@
 - Commitlint enforces messages on PRs (skips Dependabot); see `.commitlintrc.cjs`. Local template: `git config commit.template .github/COMMIT_TEMPLATE.md`.
 
 ### Dependabot & Releases
-- Dependabot PRs for npm are titled `fix(deps): bump ...` so they count as PATCH releases.
+- Dependabot PRs for npm use `deps: bump ...`; dependency updates have their own Dependencies changelog section.
 - Security updates are included in the same flow; merging them will trigger a patch release via Release Please.
 
 ## Releases & Publishing
 - Flow:
   - Work with Conventional Commits → Release Please opens a release PR (updates version + CHANGELOG).
-  - Merge the release PR → tag `vX.Y.Z` is created automatically.
-  - Tag triggers `release.yml` → build VSIX, attach to GitHub Release, publish to Marketplace (needs `VSCE_PAT`).
+  - Merge the release PR → tag `autopathcomment-vX.Y.Z` is created automatically.
+  - Release Please calls the reusable `release.yml` with the new tag → build VSIX, attach to GitHub Release, publish to Marketplace (needs `VSCE_PAT`). Tag pushes and manual dispatch with an explicit tag also support publishing.
 - Manual fallback: `npm version x.y.z && git push --follow-tags` (bypasses Release Please).
 
 ## Security & Configuration Tips

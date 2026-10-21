@@ -7,8 +7,7 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: fix
-      include: scope
+      prefix: deps
     open-pull-requests-limit: 10
     groups:
       all-minor-patch:
@@ -23,7 +22,7 @@ updates:
     schedule:
       interval: weekly
     commit-message:
-      prefix: chore(actions)
+      prefix: deps(actions)
     open-pull-requests-limit: 10
     groups:
       all:

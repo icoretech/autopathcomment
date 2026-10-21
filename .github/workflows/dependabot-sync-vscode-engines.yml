@@ -29,9 +29,9 @@ jobs:
         run: |
           echo "deps: ${{ steps.meta.outputs.dependency-names }}"
           if echo "${{ steps.meta.outputs.dependency-names }}" | grep -q "@types/vscode"; then
-            echo "touch=true" >> $GITHUB_OUTPUT
+            echo "touch=true" >> "$GITHUB_OUTPUT"
           else
-            echo "touch=false" >> $GITHUB_OUTPUT
+            echo "touch=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Checkout PR branch
@@ -45,7 +45,7 @@ jobs:
       - name: Align engines.vscode to @types/vscode (if needed)
         if: steps.check.outputs.touch == 'true'
         run: |
-          node -e '
+          node <<'NODE'
             const fs = require("fs");
             const pkg = JSON.parse(fs.readFileSync("package.json","utf8"));
             const v = pkg.devDependencies && pkg.devDependencies["@types/vscode"]; if(!v){ process.exit(0); }
@@ -60,7 +60,15 @@ jobs:
             } else {
               console.log("engines.vscode already aligned:", cur);
             }
-          '
+          const readme = fs.readFileSync("README.md", "utf8");
+          const updatedReadme = readme.replace(
+            /^- Visual Studio Code [\d.]+ or higher$/m,
+            `- Visual Studio Code ${m[1]}.${m[2]}.0 or higher`
+          );
+          if (updatedReadme !== readme) {
+            fs.writeFileSync("README.md", updatedReadme);
+          }
+          NODE
 
       - name: Update lockfile (if needed)
         if: steps.check.outputs.touch == 'true'

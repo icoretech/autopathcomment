@@ -7,19 +7,19 @@
 - **Auto-insertion of file path on Save**
   Whenever you save, AutoPathComment detects the file’s workspace-relative path and inserts it as a top-of-file comment.
 
-- **Supports Popular Languages**
-  Ships with defaults for common extensions (.js, .ts, .py, .php, .java, .go, .rb, etc.) and uses the correct single-line comment token for each. You can extend or override this map in settings.
+- **Supports source files and configuration**
+  Includes JavaScript and TypeScript module variants, C/C++ headers, Kotlin, Swift, Dart, shell scripts, YAML, TOML, Elixir, Lua, and SQL alongside the original languages. You can extend or override the map in settings.
 
 - **Directive-aware insertion**
-  Shebangs, Ruby magic comments (`# frozen_string_literal`, `# encoding`), Python `coding` declarations, and PHP opening tags are detected automatically. The comment is inserted right after that preamble so executables keep their required header.
+  Shebangs, Ruby magic comments (including editor-style encoding declarations), Python `coding` declarations, Swift tools-version headers, and standalone PHP opening tags are detected automatically. The comment is inserted after that preamble, including when the last directive has no trailing newline. CRLF line endings and UTF-8 BOMs are preserved.
 
 - **No Duplicate Comments**
   The extension checks the insertion location before writing anything, so repeated saves keep the file tidy.
 
 ## Requirements
 
-- Visual Studio Code 1.105.0 or higher
-- Node.js (for extension development, if building from source)
+- Visual Studio Code 1.140.0 or higher
+- For development: Node.js 24.15 or higher on the Node 24 release line, or Node.js 26 or higher, with npm 10 or higher
 
 ## Installation
 
@@ -31,10 +31,8 @@
 2. **From Source**:
    1. Clone the repository or download it.
    2. Run `npm install`.
-   3. Run `npm run package` or `vsce package` to create a `.vsix`.
+   3. Run `npm run vsce:package` to build and create a `.vsix`.
    4. Install the `.vsix` in VS Code as above.
-
- 
 
 ## Usage
 
@@ -62,7 +60,8 @@
 You can customize the comment prefix per file extension via Settings:
 
 - Setting: `autopathcomment.commentSyntaxMap`
-- Keys are file extensions (include the dot), values are single-line comment prefixes.
+- Keys are file extensions, values are single-line comment prefixes. Extensions are case-insensitive; a missing leading dot is accepted.
+- Settings can be defined per workspace folder. The saved document's folder determines which override applies.
 
 Examples:
 
@@ -70,18 +69,29 @@ Examples:
 // settings.json
 {
   "autopathcomment.commentSyntaxMap": {
-    ".sh": "#",
-    ".kt": "//",
-    ".zig": "//"
+    ".zig": "//",
+    ".r": "#",
+    ".custom": "--"
   }
 }
 ```
 
+Built-in extensions:
+
+| Prefix | Extensions |
+| --- | --- |
+| `//` | `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts`, `.cts`, `.rs`, `.java`, `.c`, `.cpp`, `.cc`, `.cxx`, `.h`, `.hpp`, `.cs`, `.go`, `.php`, `.kt`, `.kts`, `.swift`, `.dart` |
+| `#` | `.py`, `.rb`, `.tf`, `.hcl`, `.sh`, `.bash`, `.yaml`, `.yml`, `.toml`, `.ex`, `.exs` |
+| `--` | `.lua`, `.sql` |
+
 ## Known Issues / Limitations
 
-- **Multi-root Workspaces**: The file path is determined relative to the first workspace folder whose filesystem path prefixes the document. Nested or overlapping folders may require custom settings.
-- **Binary / Generated Files**: The extension does not discriminate between text and non-text files. Exclude generated artifacts via VS Code settings if needed.
+- **Workspace scope**: Paths use the innermost workspace folder, with `/` separators on every platform. Files outside the workspace are left unchanged.
+- **PHP templates**: Only a standalone `<?php` opening line is supported. Inline PHP tags, short echo tags, and files without a full opening tag are left unchanged so comments cannot become rendered output. Paths or custom prefixes containing `?>` are also skipped for PHP.
+- **Generated files**: Supported extensions are processed on save, including generated files. There is no generated-file exclusion setting.
 - **Comment Syntax**: Only single-line comment prefixes are supported. Add a custom mapping in settings if your language uses a different single-line token.
+- **Unusual names and settings**: Paths containing line breaks are skipped, and multiline custom prefixes are ignored, to prevent inserting executable text.
+- **Renamed files**: An old path comment may remain after moving a file. Existing comments are never guessed at or rewritten.
 
 ## Development
 
@@ -90,6 +100,16 @@ Examples:
 - Continuous build: `npm run watch`
 - Run tests (VS Code integration via `@vscode/test-cli`): `npm test`
 - Full check (types + lint + tests): `npm run check`
+- Apply formatting and safe lint fixes: `npm run lint:fix`
+- Package a distributable extension: `npm run vsce:package`
+
+TypeScript 7 provides type checking and test compilation; Biome handles formatting and linting without relying on the removed TypeScript JavaScript API. `npm-run-all2` runs the development watchers. The test runner uses a disposable multi-root workspace and exercises actual document saves in VS Code. Set `VSCODE_VERSION` to test a specific supported release.
+
+The Mocha override under `@vscode/test-cli` keeps the runner on Mocha 12 while its published dependency range still selects Mocha 11 with vulnerable transitive packages. Keep the real VS Code tests passing when updating or removing this override. The `allowScripts` entries approve the exact esbuild and VSIX-signing installation scripts for npm versions that require explicit approval.
+
+## Releases
+
+Release Please manages the version and changelog. Merging its release PR creates a tag and calls the publishing workflow directly; that workflow builds the VSIX, attaches it to the release, and publishes to the Marketplace when `VSCE_PAT` is configured. Manual release runs require the exact existing tag. Dependency updates use `deps:` commits and appear in a separate Dependencies changelog section.
 
 ## Contributing
 
