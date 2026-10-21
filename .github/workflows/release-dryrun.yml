@@ -34,9 +34,11 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           FILE="$NAME-$VERSION.vsix"
           TAG="autopathcomment-${VERSION}-dryrun-${GITHUB_RUN_NUMBER}"
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          {
+            echo "file=$FILE"
+            echo "tag=$TAG"
+            echo "version=$VERSION"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7

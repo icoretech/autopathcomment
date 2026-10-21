@@ -6,26 +6,41 @@ on:
       - 'v*.*.*'
       - '*-v*.*.*' # e.g., component-prefixed tags from Release Please like autopathcomment-v1.2.3
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      tag:
+        description: Existing release tag to publish
+        required: true
+        type: string
+    secrets:
+      VSCE_PAT:
+        required: false
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.ref || github.run_id }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 env:
   NODE_VERSION: 24
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   publish:
-    # Extra guard to avoid stray runs if GitHub creates a run on branch pushes
-    if: startsWith(github.ref, 'refs/tags/')
+    if: inputs.tag != '' || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -37,28 +52,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Debug tag context
-        run: |
-          echo "github.ref=$GITHUB_REF"
-          echo "github.sha=$GITHUB_SHA"
-          echo "github.event_name=$GITHUB_EVENT_NAME"
-          echo "Tag (raw): ${GITHUB_REF#refs/tags/}"
-          git describe --tags --always || true
-
       - name: Verify tag matches package.json version
         id: verify
         shell: bash
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
-          REF_VAL='${{ github.ref }}'
-          if [[ "$REF_VAL" == refs/tags/* ]]; then
-            TAG=${REF_VAL#refs/tags/}
-          else
-            TAG="" # workflow_dispatch or non-tag context
-          fi
-          TAG_NOPREFIX=${TAG#autopathcomment-}
-          if [[ -n "$TAG_NOPREFIX" && "$TAG_NOPREFIX" != "v$PKG_VERSION" ]]; then
-            echo "Tag $TAG does not match package.json version v$PKG_VERSION" >&2
+          PKG_NAME=$(node -p "require('./package.json').name")
+          if [[ "$RELEASE_TAG" != "v$PKG_VERSION" && "$RELEASE_TAG" != "$PKG_NAME-v$PKG_VERSION" ]]; then
+            echo "Tag $RELEASE_TAG does not match package.json version v$PKG_VERSION" >&2
             exit 1
           fi
           echo "version=$PKG_VERSION" >> "$GITHUB_OUTPUT"
@@ -84,9 +85,10 @@ jobs:
           name: ${{ steps.vars.outputs.name }}-${{ steps.verify.outputs.version }}
           path: ${{ steps.vars.outputs.file }}
 
-      - name: Create GitHub Release
+      - name: Upload VSIX to GitHub Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
           files: ${{ steps.vars.outputs.file }}
           generate_release_notes: true
         env:
