@@ -4,6 +4,18 @@ All notable changes to the "autopathcomment" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.10](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.9...autopathcomment-v0.0.10) (2026-10-21)
+
+
+### Features
+
+* expand language support and preserve file headers on save ([11e2984](https://github.com/icoretech/autopathcomment/commit/11e2984febc85159e5f908af778b63fc0b0a2bb1))
+
+
+### Bug Fixes
+
+* **ci:** call VSIX publishing with the exact release tag ([9373eca](https://github.com/icoretech/autopathcomment/commit/9373eca92d00f177f82a18dcd0e87d4bbd46cea6))
+
 ## [0.0.9](https://github.com/icoretech/autopathcomment/compare/autopathcomment-v0.0.8...autopathcomment-v0.0.9) (2026-03-23)
 
 
