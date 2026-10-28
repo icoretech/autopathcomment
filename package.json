@@ -55,7 +55,7 @@
     "check": "npm run check-types && npm run lint && npm test"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.2",
+    "@biomejs/biome": "2.6.3",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@types/mocha": "10.0.10",
