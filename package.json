@@ -55,12 +55,12 @@
     "check": "npm run check-types && npm run lint && npm test"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.4",
+    "@biomejs/biome": "2.6.5",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@types/mocha": "10.0.10",
     "@types/node": "26.6.6",
-    "@types/vscode": "1.144.0",
+    "@types/vscode": "1.145.0",
     "@vscode/test-cli": "0.0.15",
     "@vscode/test-electron": "3.1.0",
     "@vscode/vsce": "4.1.0",
